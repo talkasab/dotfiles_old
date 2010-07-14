@@ -1,0 +1,10 @@
+[user]
+	name = Tarik Alkasab
+	email = tarik.alkasab@gmail.com
+[color]
+	ui = auto
+[github]
+	user = talkasab
+	token = 8dad4534e87b3629cad7082229bacff3
+[git-tmbundle]
+	gitx-path = /usr/local/bin/gitx
