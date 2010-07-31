@@ -10,7 +10,11 @@ require 'rubygems' rescue nil
 require 'irb/completion'
 require 'irb/ext/save-history'
 require 'pp'
-require 'utility_belt'
+if RUBY_VERSION > "1.9"
+  require 'flyrb'
+else
+  require 'utility_belt'
+end
 require 'wirble'
 
 # load wirble
