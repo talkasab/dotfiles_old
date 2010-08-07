@@ -19,11 +19,6 @@ if [ -e /etc/bash.bashrc ] ; then
     source /etc/bash.bashrc
 fi
 
-# source the users bashrc if it exists
-if [ -e "${HOME}/.bashrc" ] ; then
-    source "${HOME}/.bashrc"
-fi
-
 # Set PATH so it includes user's private bin if it exists
 # if [ -d "${HOME}/bin" ] ; then
 #     PATH=${HOME}/bin:${PATH}
@@ -50,3 +45,8 @@ export EDITOR="mate -w"
 export SVN_EDITOR="mate -w"
 
 [[ $- == *i* ]]   &&   . ~/bin/git-prompt.sh
+
+# source the users bashrc if it exists
+if [ -e "${HOME}/.bashrc" ] ; then
+    source "${HOME}/.bashrc"
+fi
