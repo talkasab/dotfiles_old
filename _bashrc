@@ -118,14 +118,12 @@ alias tsr="RAILS_ENV=test ./script/runner"
 alias tsdb="RAILS_ENV=test ./script/dbconsole -p"
 
 alias gst='git status'
-alias gl='git pull'
-alias gp='git push'
-alias gd='git diff | mate'
-alias gc='git commit -v'
-alias gca='git commit -v -a'
 alias gb='git branch'
 alias gba='git branch -a'
 alias gco='git checkout'
+if [ -f /opt/local/etc/bash_completion ]; then
+  complete -o default -o nospace -F _git_checkout gco
+fi
 
 [[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
 rvm system
