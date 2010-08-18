@@ -49,6 +49,8 @@ alias gba='git branch -a'
 alias gco='git checkout'
 if [ -f /opt/local/etc/bash_completion ]; then
   complete -o default -o nospace -F _git_checkout gco
+  complete -o default -o nospace -F _git_branch gb
+  complete -o default -o nospace -F _git_branch gba
 fi
 
 # RVM
