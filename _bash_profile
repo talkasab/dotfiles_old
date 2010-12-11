@@ -40,11 +40,9 @@ fi
 
 export LC_TYPE=en_US.UTF-8
 
-export SVN_SSH=/usr/bin/ssh
-export EDITOR="mate -w"
-export SVN_EDITOR="mate -w"
+export EDITOR="${HOME}/bin/vim"
 
-[[ $- == *i* ]]   &&   . ~/bin/git-prompt.sh
+[[ $- == *i* ]]   &&   . ${HOME}/bin/git-prompt.sh
 
 # source the users bashrc if it exists
 if [ -e "${HOME}/.bashrc" ] ; then
