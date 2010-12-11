@@ -10,3 +10,6 @@
 [submodule "_vim/bundle/tpope-vim-surround"]
 	path = _vim/bundle/tpope-vim-surround
 	url = https://github.com/tpope/vim-surround.git
+[submodule "_vim/bundle/tsaleh-vim-tcomment"]
+	path = _vim/bundle/tsaleh-vim-tcomment
+	url = https://github.com/tsaleh/vim-tcomment.git
