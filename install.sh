@@ -11,4 +11,7 @@ do
   todir="$HOME/$dir"
   cp -v $dir/* $todir
 done
-  
+
+rsync -v -Ca --delete --exclude '.git' --exclude '.DS_Store' _vim/* ~/.vim
+ln -vsf ~/.vim/vimrc ~/.vimrc
+ln -vsf ~/.vim/gvimrc ~/.gvimrc
