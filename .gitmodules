@@ -16,3 +16,6 @@
 [submodule "_vim/bundle/vim-makegreen"]
 	path = _vim/bundle/vim-makegreen
 	url = https://github.com/reinh/vim-makegreen.git
+[submodule "_vim/bundle/tpope-vim-haml"]
+	path = _vim/bundle/tpope-vim-haml
+	url = https://github.com/tpope/vim-haml.git
