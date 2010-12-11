@@ -7,3 +7,6 @@
 [submodule "_vim/bundle/tpope-vim-rails"]
 	path = _vim/bundle/tpope-vim-rails
 	url = https://github.com/tpope/vim-rails.git
+[submodule "_vim/bundle/tpope-vim-surround"]
+	path = _vim/bundle/tpope-vim-surround
+	url = https://github.com/tpope/vim-surround.git
