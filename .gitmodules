@@ -4,3 +4,6 @@
 [submodule "_vim/bundle/tpope-vim-ragtag"]
 	path = _vim/bundle/tpope-vim-ragtag
 	url = https://github.com/tpope/vim-ragtag.git
+[submodule "_vim/bundle/tpope-vim-rails"]
+	path = _vim/bundle/tpope-vim-rails
+	url = https://github.com/tpope/vim-rails.git
