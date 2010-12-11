@@ -24,7 +24,7 @@ Wirble.colorize
 $LOAD_PATH << File.expand_path("#{ENV['HOME']}/.ruby")
 
 if ENV['RAILS_ENV']
-  load File.dirname(__FILE__) + "#{ENV['HOME']}/.railsrc"
+  load "#{ENV['HOME']}/.railsrc"
 end
 
 STDERR.puts "Starting Terry's customized IRB..."
