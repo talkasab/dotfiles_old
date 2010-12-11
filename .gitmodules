@@ -13,3 +13,6 @@
 [submodule "_vim/bundle/tsaleh-vim-tcomment"]
 	path = _vim/bundle/tsaleh-vim-tcomment
 	url = https://github.com/tsaleh/vim-tcomment.git
+[submodule "_vim/bundle/vim-makegreen"]
+	path = _vim/bundle/vim-makegreen
+	url = https://github.com/reinh/vim-makegreen.git
