@@ -18,7 +18,7 @@ alias df='df -h'
 alias du='du -h'
 
 # Paging
-alias l='less'
+alias p='less'
 export LESS="--long-prompt --raw-control-chars --squeeze-blank-lines --HILITE-UNREAD"
 alias more='less'                          # raw control characters
 alias whence='type -a'                        # where, of a sort
@@ -28,7 +28,7 @@ alias vl='/usr/share/vim/vim72/macros/less.sh'
 alias a='ack'
 
 # Listings
-alias d='ls -hFG'
+alias l='ls -hFG'
 alias ls='ls -hFG'                 # classify files in colour
 alias dir='ls --color=auto --format=vertical'
 alias vdir='ls --color=auto --format=long'
@@ -38,11 +38,7 @@ alias la='ls -A'                              # all but . and ..
 # Tmux
 alias t="if tmux has; then tmux attach; else tmux new; fi"
 
-# Directories
-alias c="cd"
-# We alias j to autojump elsewhere
-
-alias s="sudo"
+alias su="sudo"
 
 # Rails stuff (pre Rails 3)
 alias sc="./script/console"
@@ -66,6 +62,68 @@ if [ -f /opt/local/etc/bash_completion ]; then
   complete -o default -o nospace -F _git_branch gb
   complete -o default -o nospace -F _git_branch gba
 fi
+
+alias v="vim"
+
+# Directory stack
+
+# An enhanced 'cd' - push directories onto a stack as you navigate to it.
+# The current directory is at the top of the stack.
+#
+function stack_cd {
+    if [ $1 ]; then
+        # use the pushd bash command to push the directory
+        # to the top of the stack, and enter that directory
+        pushd "$1" > /dev/null
+    else
+        # the normal cd behavior is to enter $HOME if no
+        # arguments are specified
+        pushd $HOME > /dev/null
+    fi
+}
+# the cd command is now an alias to the stack_cd function
+#
+alias cd=stack_cd
+
+# Swap the top two directories on the stack
+#
+function swap {
+    pushd > /dev/null
+}
+# s is an alias to the swap function
+alias s=swap
+
+# Pop the top (current) directory off the stack
+# and move to the next directory
+#
+function pop_stack {
+    popd > /dev/null
+}
+alias p=pop_stack
+
+# Display the stack of directories and prompt
+# the user for an entry.
+#
+# If the user enters 'p', pop the stack.
+# If the user enters a number, move that
+# directory to the top of the stack
+# If the user enters 'q', don't do anything.
+#
+function display_stack
+{
+    dirs -v
+    echo -n "#: "
+    read dir
+    if [[ $dir = 'p' ]]; then
+        pushd > /dev/null
+    elif [[ $dir != 'q' ]]; then
+        d=$(dirs -l +$dir);
+        popd +$dir > /dev/null
+        pushd "$d" > /dev/null
+    fi
+}
+alias dd=display_stack
+alias d='dirs -v'
 
 # RVM
 [[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
