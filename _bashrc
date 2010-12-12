@@ -18,22 +18,31 @@ alias df='df -h'
 alias du='du -h'
 
 # Paging
+alias l='less'
 export LESS="--long-prompt --raw-control-chars --squeeze-blank-lines --HILITE-UNREAD"
 alias more='less'                          # raw control characters
 alias whence='type -a'                        # where, of a sort
-alias grep='grep --color'                     # show differences in colour
+alias grep='ack'                     # show differences in colour
 # Fancier Vim-enabled listings
 alias vl='/usr/share/vim/vim72/macros/less.sh'
+alias a='ack'
 
 # Listings
+alias d='ls -hFG'
 alias ls='ls -hFG'                 # classify files in colour
 alias dir='ls --color=auto --format=vertical'
 alias vdir='ls --color=auto --format=long'
-alias ll='ls -l'                              # long list
+alias ll='ls -trl'                              # long list
 alias la='ls -A'                              # all but . and ..
 
 # Tmux
 alias t="if tmux has; then tmux attach; else tmux new; fi"
+
+# Directories
+alias c="cd"
+# We alias j to autojump elsewhere
+
+alias s="sudo"
 
 # Rails stuff (pre Rails 3)
 alias sc="./script/console"
@@ -47,6 +56,7 @@ alias tsr="RAILS_ENV=test ./script/runner"
 alias tsdb="RAILS_ENV=test ./script/dbconsole -p"
 
 # Git stuff
+alias gs='git status'
 alias gst='git status'
 alias gb='git branch'
 alias gba='git branch -a'
