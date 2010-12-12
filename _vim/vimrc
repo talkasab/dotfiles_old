@@ -55,6 +55,8 @@ set statusline=[%n]\ %<%.99f\ %h%w%m%r%y\ %{fugitive#statusline()}%{exists('*Cap
 
 " Or use vividchalk
 colorscheme vividchalk
+highlight NonText guibg=#060606
+highlight Folded  guibg=#0A0A0A guifg=#9090D0
 
 " Tab mappings.
 " map <leader>tt :tabnew<cr>
@@ -69,7 +71,10 @@ colorscheme vividchalk
 
 map <Leader>f :FuzzyFinderTextMate<Enter>
 map <Leader>n :NERDTreeToggle<Enter>
+map <F7> :NERDTreeToggle<Enter>
 map <F8> :TlistToggle<Enter>
+map <F6> :BufExplorer<Enter>
+map <F5> <C-w>w
 
 " Controversial...swap colon and semicolon for easier commands
 "nnoremap ; :
