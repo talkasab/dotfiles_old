@@ -14,6 +14,8 @@
 
 # ~/.bash_profile: executed by bash for login shells.
 
+# echo "Starting .bash_profile"
+
 # source the system wide bashrc if it exists
 if [ -e /etc/bash.bashrc ] ; then
     source /etc/bash.bashrc
@@ -39,6 +41,8 @@ if [ -f /opt/local/etc/bash_completion ]; then
 fi
 
 export LC_TYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 export EDITOR="${HOME}/bin/vim"
 
@@ -48,3 +52,4 @@ export EDITOR="${HOME}/bin/vim"
 if [ -e "${HOME}/.bashrc" ] ; then
     source "${HOME}/.bashrc"
 fi
+# echo "Ending .bash_profile"

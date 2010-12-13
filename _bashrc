@@ -6,6 +6,8 @@
 # Don't put duplicate lines in the history.
 # export HISTCONTROL="ignoredups"
 
+# echo "Starting .bashrc"
+
 # Ignore some controlling instructions
 export HISTIGNORE="[   ]*:&:bg:fg:exit"
 
@@ -19,6 +21,7 @@ alias du='du -h'
 
 # Paging
 alias p='less'
+alias le='less'
 export LESS="--long-prompt --raw-control-chars --squeeze-blank-lines --HILITE-UNREAD"
 alias more='less'                          # raw control characters
 alias whence='type -a'                        # where, of a sort
@@ -64,7 +67,9 @@ if [ -f /opt/local/etc/bash_completion ]; then
 fi
 
 alias v="vim"
+alias vi="vim"
 
+# echo "Starting directory stack"
 # Directory stack
 
 # An enhanced 'cd' - push directories onto a stack as you navigate to it.
@@ -99,7 +104,7 @@ alias s=swap
 function pop_stack {
     popd > /dev/null
 }
-alias p=pop_stack
+# alias p=pop_stack
 
 # Display the stack of directories and prompt
 # the user for an entry.
@@ -125,9 +130,11 @@ function display_stack
 alias dd=display_stack
 alias d='dirs -v'
 
+# echo "Starting RVM"
 # RVM
 [[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
 
+# echo "Starting Autojump"
 #autojump
 
 _autojump() 
@@ -162,3 +169,5 @@ fi
 alias jumpstat="autojump --stat"
 alias js="autojump --stat"
 function j { new_path="$(autojump $@)";if [ -n "$new_path" ]; then echo -e "\\033[31m${new_path}\\033[0m"; cd "$new_path";fi }
+
+# echo "Ending .bashrc"
