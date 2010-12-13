@@ -615,22 +615,6 @@ enable_set_shell_label() {
 	     set_shell_label $BASH_COMMAND' DEBUG  >& /dev/null
  }
 
-# autojump (see http://wiki.github.com/joelthelion/autojump)
-j (){
-        : ${1? usage: j dir-beginning}
-        # go in ring buffer starting from current index.  cd to first matching dir
-        for (( i=(aj_idx+1)%aj_max;   i != aj_idx%aj_max;  i=++i%aj_max )) ; do
-                #echo == ${aj_dir_list[$i]} == $i
-                if [[ ${aj_dir_list[$i]} =~ ^.*/$1[^/]*$ ]] ; then
-                        cd "${aj_dir_list[$i]}"
-                        return
-                fi
-        done
-        echo '?'
-}
-
-alias jumpstart='echo ${aj_dir_list[@]}'
-
 ###################################################################### PROMPT_COMMAND
 
 prompt_command_function() {
