@@ -51,6 +51,9 @@ rescue LoadError
 end
 $console_extensions = []
 
+extend_console 'irb/completion'
+extend_console 'interactive_editor'
+
 # Wirble is a gem that handles coloring the IRB
 # output and history
 extend_console 'wirble' do
