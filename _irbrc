@@ -63,6 +63,12 @@ end
 
 extend_console 'wirb' do
   Wirb.start
+  Wirb.schema[:open_string] = :dark_blue
+  Wirb.schema[:string] = :light_blue
+  Wirb.schema[:close_string] = :dark_blue
+  Wirb.schema[:open_regexp] = :dark_blue
+  Wirb.schema[:regexp] = :light_blue
+  Wirb.schema[:close_regexp] = :dark_blue
 end
 
 # Hirb makes tables easy.
