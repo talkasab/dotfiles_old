@@ -19,3 +19,6 @@
 [submodule "_vim/bundle/tpope-vim-haml"]
 	path = _vim/bundle/tpope-vim-haml
 	url = https://github.com/tpope/vim-haml.git
+[submodule "_vim/bundle/Specky"]
+	path = _vim/bundle/Specky
+	url = https://github.com/vim-scripts/Specky.git
