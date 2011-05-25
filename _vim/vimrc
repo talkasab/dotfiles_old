@@ -90,7 +90,7 @@ map <F5> <C-w>w
 " For the MakeGreen plugin and Ruby RSpec. Uncomment to use.
 " autocmd BufNewFile,BufRead *_spec.rb compiler rspec
 
-let g:speckyRunSpecCmd       = "rspec -r ~/.vim/ruby/specky_formatter.rb -f SpeckyFormatter"
+let g:speckyRunSpecCmd       = "rspec -r ~/.vim/bundle/Specky/ruby/specky_formatter.rb -f SpeckyFormatter"
 let g:speckyBannerKey        = "<C-S>b"
 let g:speckyQuoteSwitcherKey = "<C-S>'"
 let g:speckyRunRdocKey       = "<C-S>r"
