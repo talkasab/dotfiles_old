@@ -1,1 +1,1 @@
-should ensure_length_in_range :${1:field}, ${2:start}..${3:end}
+should ensure_length_of(:${1:field}).is_at_least(${2:minimum}).is_at_most(${3:maximum})
