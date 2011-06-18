@@ -54,7 +54,7 @@ set complete=.,t
 set statusline=[%n]\ %<%.99f\ %h%w%m%r%y\ %{fugitive#statusline()}%{exists('*CapsLockStatusline')?CapsLockStatusline():''}%=%-16(\ %l,%c-%v\ %)%P
 
 " Or use vividchalk
-colorscheme deveiate
+colorscheme vividchalk
 highlight NonText guibg=#060606
 highlight Folded  guibg=#0A0A0A guifg=#9090D0
 
@@ -88,14 +88,5 @@ map <F5> <C-w>w
 " autocmd FileType css  setlocal foldmethod=indent shiftwidth=2 tabstop=2
 
 " For the MakeGreen plugin and Ruby RSpec. Uncomment to use.
-" autocmd BufNewFile,BufRead *_spec.rb compiler rspec
-
-let g:speckyRunSpecCmd       = "rspec -r ~/.vim/bundle/Specky/ruby/specky_formatter.rb -f SpeckyFormatter"
-let g:speckyBannerKey        = "<C-S>b"
-let g:speckyQuoteSwitcherKey = "<C-S>'"
-let g:speckyRunRdocKey       = "<C-S>r"
-let g:speckySpecSwitcherKey  = "<C-S>x"
-let g:speckyRunSpecKey       = "<C-S>s"
-let g:speckyRunRdocCmd       = "fri -L -f plain"
-let g:speckyWindowType       = 2
-
+autocmd BufNewFile,BufRead *_spec.rb compiler rspec
+au BufRead,BufNewFile jquery.*.js set ft=javascript syntax=jquery

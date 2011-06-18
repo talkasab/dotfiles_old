@@ -19,3 +19,6 @@
 [submodule "_vim/bundle/tpope-vim-haml"]
 	path = _vim/bundle/tpope-vim-haml
 	url = https://github.com/tpope/vim-haml.git
+[submodule "_vim/bundle/vim-taglist-plus"]
+	path = _vim/bundle/vim-taglist-plus
+	url = https://github.com/int3/vim-taglist-plus.git
