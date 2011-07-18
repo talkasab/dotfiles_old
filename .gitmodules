@@ -28,3 +28,6 @@
 [submodule "_vim/bundle/vim-gist"]
 	path = _vim/bundle/vim-gist
 	url = https://github.com/mattn/gist-vim.git
+[submodule "_vim/bundle/vim-colors-solarized"]
+	path = _vim/bundle/vim-colors-solarized
+	url = git://github.com/altercation/vim-colors-solarized.git
