@@ -1,11 +1,11 @@
 " FILE:     plugin/conque_term.vim {{{
 " AUTHOR:   Nico Raffo <nicoraffo@gmail.com>
 " WEBSITE:  http://conque.googlecode.com
-" MODIFIED: 2011-04-04
-" VERSION:  2.1, for Vim 7.0
+" MODIFIED: __MODIFIED__
+" VERSION:  __VERSION__, for Vim 7.0
 " LICENSE:
 " Conque - Vim terminal/console emulator
-" Copyright (C) 2009-2011 Nico Raffo 
+" Copyright (C) 2009-__YEAR__ Nico Raffo 
 "
 " MIT License
 " 
@@ -169,6 +169,11 @@ if !exists('g:ConqueTerm_CodePage')
     let g:ConqueTerm_CodePage = 0
 endif " }}}
 
+" InsertCharPre support {{{
+" Disable this feature by default, still in Beta
+if !exists('g:ConqueTerm_InsertCharPre')
+    let g:ConqueTerm_InsertCharPre = 0
+endif " }}}
 
 " }}}
 

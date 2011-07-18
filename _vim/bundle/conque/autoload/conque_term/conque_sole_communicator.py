@@ -1,11 +1,11 @@
 # FILE:     autoload/conque_term/conque_sole_communicator.py
 # AUTHOR:   Nico Raffo <nicoraffo@gmail.com>
 # WEBSITE:  http://conque.googlecode.com
-# MODIFIED: 2011-04-04
-# VERSION:  2.1, for Vim 7.0
+# MODIFIED: __MODIFIED__
+# VERSION:  __VERSION__, for Vim 7.0
 # LICENSE:
 # Conque - Vim terminal/console emulator
-# Copyright (C) 2009-2011 Nico Raffo
+# Copyright (C) 2009-__YEAR__ Nico Raffo
 #
 # MIT License
 #
@@ -58,9 +58,9 @@ if __name__ == '__main__':
     try:
 
         # simple arg validation
-
+        logging.debug(str(sys.argv))
         if len(sys.argv) < 5:
-
+            logging.info('Arg validation failed!')
             exit()
 
         # maximum time this thing reads. 0 means no limit. Only for testing.
@@ -92,12 +92,12 @@ if __name__ == '__main__':
 
         # the actual subprocess to run
         cmd_line = " ".join(sys.argv[6:])
-
+        logging.info('opening command: ' + cmd_line)
 
         # width and height
         options = {'LINES': console_height, 'COLUMNS': console_width, 'CODE_PAGE': code_page, 'FAST_MODE': fast_mode}
 
-
+        logging.info('with options: ' + str(options))
 
         # set initial idle status
         shm_command = ConqueSoleSharedMemory(CONQUE_SOLE_COMMANDS_SIZE, 'command', mem_key, serialize=True)
@@ -105,11 +105,11 @@ if __name__ == '__main__':
 
         cmd = shm_command.read()
         if cmd:
-
+            logging.info('has command')
             if cmd['cmd'] == 'idle':
                 is_idle = True
                 shm_command.clear()
-
+                logging.info('idling')
 
         ##############################################################
         # Create the subprocess
@@ -118,7 +118,7 @@ if __name__ == '__main__':
         res = proc.open(cmd_line, mem_key, options)
 
         if not res:
-
+            logging.info('process failed to open')
             exit()
 
         ##############################################################
@@ -133,22 +133,22 @@ if __name__ == '__main__':
 
                 # check process health
                 if not proc.is_alive():
-
+                    logging.info('subprocess appears to be deadish, closing')
                     proc.close()
                     break
 
                 # check for change in buffer focus
                 cmd = shm_command.read()
                 if cmd:
-
+                    logging.info('has command')
                     if cmd['cmd'] == 'idle':
                         is_idle = True
                         shm_command.clear()
-
+                        logging.info('idling')
                     elif cmd['cmd'] == 'resume':
                         is_idle = False
                         shm_command.clear()
-
+                        logging.info('resuming')
 
             # sleep between loops if moderation is requested
             if sleep_time > 0:
@@ -164,19 +164,19 @@ if __name__ == '__main__':
             # increment loops, and exit if max has been reached
             loops += 1
             if max_loops and loops >= max_loops:
-
+                logging.debug('max loops reached')
                 break
 
         ##############################################################
         # all done!
 
-
+        logging.debug(proc.get_screen_text())
 
         proc.close()
 
     # if an exception was thrown, croak
     except:
-
+        logging.info(traceback.format_exc())
         proc.close()
 
 
