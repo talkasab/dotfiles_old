@@ -6,14 +6,16 @@
 
         #####  read config file if any.
 
-        unset   dir_color rc_color user_id_color root_id_color init_vcs_color clean_vcs_color
-        unset modified_vcs_color added_vcs_color addmoded_vcs_color untracked_vcs_color op_vcs_color detached_vcs_color
+        unset dir_color rc_color user_id_color root_id_color init_vcs_color clean_vcs_color
+        unset modified_vcs_color added_vcs_color addmoded_vcs_color untracked_vcs_color op_vcs_color detached_vcs_color hex_vcs_color
+        unset rawhex_len
 
         conf=git-prompt.conf;                   [[ -r $conf ]]  && . $conf
         conf=/etc/git-prompt.conf;              [[ -r $conf ]]  && . $conf
         conf=~/.git-prompt.conf;                [[ -r $conf ]]  && . $conf
         conf=~/.config/git-prompt.conf;         [[ -r $conf ]]  && . $conf
         unset conf
+
 
         #####  set defaults if not set
 
@@ -42,7 +44,7 @@
 	prompt_char=${prompt_char:-'>'}
 	root_prompt_char=${root_prompt_char:-'>'}
 
-        #### vcs state colors
+        #### vcs colors
                  init_vcs_color=${init_vcs_color:-WHITE}        # initial
                 clean_vcs_color=${clean_vcs_color:-blue}        # nothing to commit (working directory clean)
              modified_vcs_color=${modified_vcs_color:-red}      # Changed but not updated:
@@ -52,8 +54,14 @@
                    op_vcs_color=${op_vcs_color:-MAGENTA}
              detached_vcs_color=${detached_vcs_color:-RED}
 
+                  hex_vcs_color=${hex_vcs_color:-BLACK}         # gray
+
+
         max_file_list_length=${max_file_list_length:-100}
+        short_hostname=${short_hostname:-off}
         upcase_hostname=${upcase_hostname:-on}
+        count_only=${count_only:-off}
+        rawhex_len=${rawhex_len:-5}
 
         aj_max=20
 
@@ -108,8 +116,10 @@
              YELLOW='\['`tput setaf 3; tput bold`'\]'
                BLUE='\['`tput setaf 4; tput bold`'\]'
             MAGENTA='\['`tput setaf 5; tput bold`'\]'
-               CYAN='\['`tput setaf 6; tput bold`'\]'  # why 14 doesn't work?
+               CYAN='\['`tput setaf 6; tput bold`'\]'
               WHITE='\['`tput setaf 7; tput bold`'\]'
+
+                dim='\['`tput sgr0; tput setaf p1`'\]'  # half-bright
 
             bw_bold='\['`tput bold`'\]'
 
@@ -127,6 +137,7 @@
                    op_vcs_color=${!op_vcs_color}
              addmoded_vcs_color=${!addmoded_vcs_color}
              detached_vcs_color=${!detached_vcs_color}
+                  hex_vcs_color=${!hex_vcs_color}
 
         unset PROMPT_COMMAND
 
@@ -220,22 +231,25 @@ set_shell_label() {
                 # FIXME $STY not inherited though "su -"
                 [ "$STY" ] && screen -S $STY -X title "$*"
         }
+        if [[ -n "$STY" ]]; then
+                screen_label "$*"
+        else
+                case $TERM in
 
-        case $TERM in
+                        screen*)
+                                screen_label "$*"
+                                ;;
 
-                screen*)
-                        screen_label "$*"
-                        ;;
+                        xterm* | rxvt* | gnome-terminal | konsole | eterm | wterm )
+                                # is there a capability which we can to test
+                                # for "set term title-bar" and its escapes?
+                                xterm_label  "$plain_who_where $@"
+                                ;;
 
-                xterm* | rxvt* | gnome-terminal | konsole | eterm | wterm )
-                        # is there a capability which we can to test
-                        # for "set term title-bar" and its escapes?
-                        xterm_label  "$plain_who_where $@"
-                        ;;
-
-                *)
-                        ;;
-        esac
+                        *)
+                                ;;
+                esac
+        fi
  }
 
     export -f set_shell_label
@@ -261,7 +275,7 @@ set_shell_label() {
 
         # we don't need tty name under X11
         case $TERM in
-                xterm* | rxvt* | gnome-terminal | konsole | eterm | wterm )  unset tty ;;
+                xterm* | rxvt* | gnome-terminal | konsole | eterm* | wterm | cygwin)  unset tty ;;
                 *);;
         esac
 
@@ -279,8 +293,10 @@ set_shell_label() {
         # if    { for ((pid=$$; $pid != 1 ; pid=`ps h -o pid --ppid $pid`)); do ps h -o command -p $pid; done | grep -q sshd && echo == REMOTE ==; }
         #then
 
-        #host=${HOSTNAME}
-        host=`hostname -s`
+        host=${HOSTNAME}
+        if [[ $short_hostname = "on" ]]; then
+            host=`hostname -s`
+        fi
         host=${host#$default_host}
         uphost=`echo ${host} | tr a-z A-Z`
         if [[ $upcase_hostname = "on" ]]; then
@@ -299,7 +315,6 @@ set_shell_label() {
 
         # we might already have short host name
         host=${host%.$default_domain}
-
 
 #################################################################### WHO_WHERE
         #  [[user@]host[-tty]]
@@ -381,24 +396,6 @@ parse_hg_status() {
  }
 
 
-parse_git_complete() {
-        if [ "${BASH_VERSION%.*}" \< "3.0" ]; then
-                # echo "You will need to upgrade 'bash' to version 3.0 \
-                # for full programmable completion features (bash complete) \
-                # Please install bash-completion packet like: $ yum -y install bash-completion"
-                return
-        fi
-
-        complete -f -W "$(
-                echo `git branch -a | sed -e s/[\ \*]//g | cut -f 1 -d ' ' | uniq`; \
-                echo `git remote | sed -e s/[\ \*]//g | cut -f 1 -d ' ' | uniq`; \
-                echo `git | tail -23 | head -21 | cut -d ' ' -f 4`; \
-                echo '--help'; \
-                echo '--staged'; \
-                echo 'remote'; \
-                echo 'help'; \
-        )" g git
-}
 
 parse_git_status() {
 
@@ -411,13 +408,13 @@ parse_git_status() {
         [[  -n ${git_dir/./} ]]   ||   return  1
 
         vcs=git
-        parse_git_complete
 
         ##########################################################   GIT STATUS
-	file_regex='\([^/]*\/\?\).*'
+	file_regex='\([^/ ]*\/\{0,1\}\).*'
 	added_files=()
 	modified_files=()
 	untracked_files=()
+        freshness="$dim"
         unset branch status modified added clean init added mixed untracked op detached
 
 	# quoting hell
@@ -425,8 +422,12 @@ parse_git_status() {
                 git status 2>/dev/null |
                     sed -n '
                         s/^# On branch /branch=/p
-                        s/^nothing to commit (working directory clean)/clean=clean/p
-                        s/^# Initial commit/init=init/p
+                        s/^nothing to commi.*/clean=clean/p
+                        s/^# Initial commi.*/init=init/p
+
+                        s/^# Your branch is ahead of .[/[:alnum:]]\+. by [[:digit:]]\+ commit.*/freshness=${WHITE}↑/p
+                        s/^# Your branch is behind .[/[:alnum:]]\+. by [[:digit:]]\+ commit.*/freshness=${YELLOW}↓/p
+                        s/^# Your branch and .[/[:alnum:]]\+. have diverged.*/freshness=${YELLOW}↕/p
 
                         /^# Changes to be committed:/,/^# [A-Z]/ {
                             s/^# Changes to be committed:/added=added;/p
@@ -441,6 +442,17 @@ parse_git_status() {
                             s/^# Changed but not updated:/modified=modified;/p
                             s/^#	modified:   '"$file_regex"'/	[[ \" ${modified_files[*]} \" =~ \" \1 \" ]] || modified_files[${#modified_files[@]}]=\"\1\"/p
                             s/^#	unmerged:   '"$file_regex"'/	[[ \" ${modified_files[*]} \" =~ \" \1 \" ]] || modified_files[${#modified_files[@]}]=\"\1\"/p
+                        }
+
+                        /^# Changes not staged for commit:/,/^# [A-Z]/ {
+                            s/^# Changes not staged for commit:/modified=modified;/p
+                            s/^#	modified:   '"$file_regex"'/	[[ \" ${modified_files[*]} \" =~ \" \1 \" ]] || modified_files[${#modified_files[@]}]=\"\1\"/p
+                            s/^#	unmerged:   '"$file_regex"'/	[[ \" ${modified_files[*]} \" =~ \" \1 \" ]] || modified_files[${#modified_files[@]}]=\"\1\"/p
+                        }
+
+                        /^# Unmerged paths:/,/^[^#]/ {
+                            s/^# Unmerged paths:/modified=modified;/p
+                            s/^#	both modified:\s*'"$file_regex"'/	[[ \" ${modified_files[*]} \" =~ \" \1 \" ]] || modified_files[${#modified_files[@]}]=\"\1\"/p
                         }
 
                         /^# Untracked files:/,/^[^#]/{
@@ -497,12 +509,16 @@ parse_git_status() {
 
 
         ####  GET GIT HEX-REVISION
-        rawhex=`git rev-parse HEAD 2>/dev/null`
-        rawhex=${rawhex/HEAD/}
-        rawhex=${rawhex:0:6}
+        if  [[ $rawhex_len -gt 0 ]] ;  then
+                rawhex=`git rev-parse HEAD 2>/dev/null`
+                rawhex=${rawhex/HEAD/}
+                rawhex="=$hex_vcs_color${rawhex:0:$rawhex_len}"
+        else
+                rawhex=""
+        fi
 
         #### branch
-        #branch=${branch/master/M}
+        # branch=${branch/master/M}
 
                         # another method of above:
                         # branch=$(git symbolic-ref -q HEAD || { echo -n "detached:" ; git name-rev --name-only HEAD 2>/dev/null; } )
@@ -510,8 +526,8 @@ parse_git_status() {
 
         ### compose vcs_info
 
-        if [[ $init ]];  then
-                vcs_info=M$white=init
+        if [[ $init ]];  then 
+                vcs_info=${white}init
 
         else
                 if [[ "$detached" ]] ;  then
@@ -525,7 +541,7 @@ parse_git_status() {
                         fi
                         #branch="<$branch>"
                 fi
-                vcs_info="$branch$white=$rawhex"
+                vcs_info="$branch$freshness$rawhex"
 
         fi
  }
@@ -569,23 +585,33 @@ parse_vcs_status() {
                 eval $old_nullglob
 
                 if [[ $vim_glob ]];  then
-                    vim_file=${vim_glob#.}
-                    vim_file=${vim_file/.sw?/}
+                    set $vim_glob
+                    #vim_file=${vim_glob#.}
+                    if [[ $# > 1 ]] ; then 
+                            vim_files="*"
+                    else
+                            vim_file=${1#.}
+                            vim_file=${vim_file/.sw?/}
+                            [[ .${vim_file}.swp -nt $vim_file ]]  && vim_files=$vim_file
+                    fi
                     # if swap is newer,  then this is unsaved vim session
-                    #[[ .${vim_file}.swp -nt $vim_file ]]  && vim_files=$vim_file
                     # [temoto custom] if swap is older, then it must be deleted, so show all swaps.
-                    vim_files=$vim_file
                 fi
         fi
 
 
         ### file list
         unset file_list
-        [[ ${added_files[0]}     ]]  &&  file_list+=" "$added_vcs_color${added_files[@]}
-        [[ ${modified_files[0]}  ]]  &&  file_list+=" "$modified_vcs_color${modified_files[@]}
-        [[ ${untracked_files[0]} ]]  &&  file_list+=" "$untracked_vcs_color${untracked_files[@]}
-        [[ ${vim_files}          ]]  &&  file_list+=" "${RED}vim:${vim_files}
-        file_list=${file_list:+:$file_list}
+        if [[ $count_only = "on" ]] ; then
+                [[ ${added_files[0]}     ]]  &&  file_list+=" "${added_vcs_color}+${#added_files[@]}
+                [[ ${modified_files[0]}  ]]  &&  file_list+=" "${modified_vcs_color}*${#modified_files[@]}
+                [[ ${untracked_files[0]} ]]  &&  file_list+=" "${untracked_vcs_color}?${#untracked_files[@]}
+        else
+                [[ ${added_files[0]}     ]]  &&  file_list+=" "$added_vcs_color${added_files[@]}
+                [[ ${modified_files[0]}  ]]  &&  file_list+=" "$modified_vcs_color${modified_files[@]}
+                [[ ${untracked_files[0]} ]]  &&  file_list+=" "$untracked_vcs_color${untracked_files[@]}
+        fi
+        [[ ${vim_files}          ]]  &&  file_list+=" "${MAGENTA}vim:${vim_files}
 
         if [[ ${#file_list} -gt $max_file_list_length ]]  ;  then
                 file_list=${file_list:0:$max_file_list_length}
@@ -595,7 +621,7 @@ parse_vcs_status() {
         fi
 
 
-        head_local="(${vcs_info}$vcs_color${file_list}$vcs_color)"
+        head_local="$vcs_color(${vcs_info}$vcs_color${file_list}$vcs_color)"
 
         ### fringes
         head_local="${head_local+$vcs_color$head_local }"
@@ -607,13 +633,34 @@ disable_set_shell_label() {
         trap - DEBUG  >& /dev/null
  }
 
-# enable stuffing currently executed command displays in label
+# show currently executed command in label
 enable_set_shell_label() {
         disable_set_shell_label
 	# check for BASH_SOURCE being empty, no point running set_shell_label on every line of .bashrc
         trap '[[ -z "$BASH_SOURCE" && ($BASH_COMMAND != prompt_command_function) ]] &&
 	     set_shell_label $BASH_COMMAND' DEBUG  >& /dev/null
  }
+
+# autojump (see http://wiki.github.com/joelthelion/autojump)
+
+# TODO reverse the line order of a file
+#awk ' { line[NR] = $0 }
+#      END  { for (i=NR;i>0;i--)
+#             print line[i] }' listlogs
+
+# j (){
+#         : ${1? usage: j dir-beginning}
+#         # go in ring buffer starting from current index.  cd to first matching dir
+#         for (( i=(aj_idx-1)%aj_max;   i != aj_idx%aj_max;  i=(--i+aj_max)%aj_max )) ; do
+#                 if [[ ${aj_dir_list[$i]} =~ ^.*/$1[^/]*$ ]] ; then
+#                         cd "${aj_dir_list[$i]}"
+#                         return
+#                 fi
+#         done
+#         echo '?'
+#  }
+# 
+# alias jumpstart='echo ${aj_dir_list[@]}'
 
 ###################################################################### PROMPT_COMMAND
 
@@ -640,10 +687,10 @@ prompt_command_function() {
         # else eval cwd_cmd,  cwd should have path after exection
         eval "${cwd_cmd/\\/cwd=\\\\}"
 
-        PS1="$colors_reset$rc$head_local$color_who_where$dir_color$cwd$tail_local$dir_color $prompt_char $colors_reset"
+        PS1="$colors_reset$rc$head_local$color_who_where$dir_color$cwd$tail_local$dir_color$prompt_char $colors_reset"
 
         unset head_local tail_local pwd
-}
+ }
 
         PROMPT_COMMAND=prompt_command_function
 
