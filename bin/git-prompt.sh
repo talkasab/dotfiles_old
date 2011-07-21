@@ -302,6 +302,9 @@ set_shell_label() {
         if [[ $upcase_hostname = "on" ]]; then
                 host=${uphost}
         fi
+        if [[ -z $SSH_CLIENT ]]; then
+                host=''
+        fi
 
         host_color=${uphost}_host_color
         host_color=${!host_color}
