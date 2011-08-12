@@ -1,3 +1,4 @@
+# vim: set ft=sh
 # .bashrc
 # Tarik Alkasab
 
@@ -68,6 +69,58 @@ fi
 
 alias v="vim"
 alias vi="vim"
+
+# An enhanced 'cd' - push directories
+# onto a stack as you navigate to it.
+#
+# The current directory is at the top
+# of the stack.
+#
+function tka_stack_cd {
+  if [ $1 ]; then pushd "$1" > /dev/null
+  else pushd $HOME > /dev/null
+  fi
+}
+# the cd command is now an alias to the stack_cd function
+alias c='tka_stack_cd'
+
+# Swap the top two directories on the stack
+#
+function swap {
+  pushd > /dev/null
+}
+# s is an alias to the swap function
+alias s='swap'
+
+# Pop the top (current) directory off the stack
+# and move to the next directory
+#
+function pop_stack {
+  popd > /dev/null
+}
+alias p='pop_stack'
+
+# Display the stack of directories and prompt
+# the user for an entry.
+#
+# If the user enters 'p', pop the stack.
+# If the user enters a number, move that
+# directory to the top of the stack
+# If the user enters 'q', don't do anything.
+#
+function display_stack {
+  dirs -v
+  echo -n "#: "
+  read dir
+  if [[ $dir = 'p' ]]; then 
+    pushd > /dev/null
+  elif [[ $dir != 'q' ]]; then 
+    d=$(dirs -l +$dir)
+    popd +$dir > /dev/null
+    pushd "$d" > /dev/null
+  fi
+}
+alias d='display_stack'
 
 # echo "Starting RVM"
 # RVM
