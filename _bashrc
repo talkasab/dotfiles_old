@@ -43,6 +43,9 @@ alias la='ls -A'                              # all but . and ..
 alias t="if tmux has; then tmux attach; else tmux new; fi"
 
 alias su="sudo"
+alias kc=". ~/.keychain/${HOSTNAME}-sh"
+alias be="bundle exec"
+alias ttr="touch tmp/restart.txt"
 
 # Rails stuff (pre Rails 3)
 alias sc="./script/console"
@@ -50,6 +53,7 @@ alias ss="./script/server"
 alias sr="./script/runner"
 alias sdb="./script/dbconsole -p"
 alias sg="./script/generate"
+alias src="./script/rails console"
 alias tsc="RAILS_ENV=test ./script/console"
 alias tss="RAILS_ENV=test ./script/server"
 alias tsr="RAILS_ENV=test ./script/runner"
