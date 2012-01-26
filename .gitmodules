@@ -1,6 +1,3 @@
-[submodule "_vim/bundle/msanders-snipmate.vim"]
-	path = _vim/bundle/msanders-snipmate.vim
-	url = https://github.com/msanders/snipmate.vim.git
 [submodule "_vim/bundle/tpope-vim-ragtag"]
 	path = _vim/bundle/tpope-vim-ragtag
 	url = https://github.com/tpope/vim-ragtag.git
@@ -10,9 +7,6 @@
 [submodule "_vim/bundle/tpope-vim-surround"]
 	path = _vim/bundle/tpope-vim-surround
 	url = https://github.com/tpope/vim-surround.git
-[submodule "_vim/bundle/tsaleh-vim-tcomment"]
-	path = _vim/bundle/tsaleh-vim-tcomment
-	url = https://github.com/tsaleh/vim-tcomment.git
 [submodule "_vim/bundle/vim-makegreen"]
 	path = _vim/bundle/vim-makegreen
 	url = https://github.com/reinh/vim-makegreen.git
@@ -24,7 +18,7 @@
 	url = https://github.com/int3/vim-taglist-plus.git
 [submodule "_vim/bundle/vim-coffee-script"]
 	path = _vim/bundle/vim-coffee-script
-	url = git://github.com/kchmck/vim-coffee-script.git
+	url = https://github.com/kchmck/vim-coffee-script.git
 [submodule "_vim/bundle/vim-gist"]
 	path = _vim/bundle/vim-gist
 	url = https://github.com/mattn/gist-vim.git
@@ -37,3 +31,18 @@
 [submodule "_vim/bundle/vim-textobj-rubyblock"]
 	path = _vim/bundle/vim-textobj-rubyblock
 	url = https://github.com/nelstrom/vim-textobj-rubyblock.git
+[submodule "_vim/bundle/tcomment_vim"]
+	path = _vim/bundle/tcomment_vim
+	url = https://github.com/tomtom/tcomment_vim.git
+[submodule "_vim/bundle/tlib_vim"]
+	path = _vim/bundle/tlib_vim
+	url = https://github.com/tomtom/tlib_vim.git
+[submodule "_vim/bundle/vim-addon-mw-utils"]
+	path = _vim/bundle/vim-addon-mw-utils
+	url = https://github.com/MarcWeber/vim-addon-mw-utils.git
+[submodule "_vim/bundle/snipmate-snippets"]
+	path = _vim/bundle/snipmate-snippets
+	url = https://github.com/honza/snipmate-snippets.git
+[submodule "_vim/bundle/vim-snipmate"]
+	path = _vim/bundle/vim-snipmate
+	url = git://github.com/garbas/vim-snipmate.git
