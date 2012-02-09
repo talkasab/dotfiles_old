@@ -1,13 +1,9 @@
 # vim: ft=ruby
-begin
-  require 'interactive_editor'
-rescue LoadError => e
-  warn "=> Unable to load interactive_editor"
-end
 
 # Setup Rails, if we're there
 rails = File.join(Dir.getwd, 'config', 'environment.rb')
 if File.exist?(rails) && ENV['SKIP_RAILS'].nil?
+  warn "=> Loading Rails (#{Rails.version})"
   require rails
   if Rails.version[0..0] == '3'
     require 'rails/console/app'
@@ -19,14 +15,35 @@ if File.exist?(rails) && ENV['SKIP_RAILS'].nil?
     require 'console_app'
     require 'console_with_helpers'
   else
-    warn "[WARN] cannot load Rails console commands (Not on Rails2 or Rails3?)"
+    warn "=> Cannot load Rails console commands (Not on Rails2 or Rails3?)"
   end
 end
 
+# Setup awesome_print
 begin
   require 'awesome_print'
   Pry.config.print = proc {|output, value| Pry::Helpers::BaseHelpers.stagger_output("=> #{value.ai}", output)}
 rescue LoadError => err
   warn "=> Unable to load awesome_print"
+end
+
+begin
+  require 'hirb'
+  Hirb.enable
+
+  old_print = Pry.config.print
+  Pry.config.print = proc do |output, value|
+    Hirb::View.view_or_page_output(value) || old_print.call(output, value)
+  end
+rescue LoadError => e
+  warn "=> Unable to load Hirb"
+end
+
+
+# Setup interactive_editor
+begin
+  require 'interactive_editor'
+rescue LoadError => e
+  warn "=> Unable to load interactive_editor"
 end
 
