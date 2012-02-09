@@ -3,8 +3,8 @@
 # Setup Rails, if we're there
 rails = File.join(Dir.getwd, 'config', 'environment.rb')
 if File.exist?(rails) && ENV['SKIP_RAILS'].nil?
-  warn "=> Loading Rails (#{Rails.version})"
   require rails
+  warn "=> Loading Rails (#{Rails.version})"
   if Rails.version[0..0] == '3'
     require 'rails/console/app'
     require 'rails/console/helpers'
