@@ -1,23 +1,34 @@
 # vim: ft=ruby
 
 # Setup Rails, if we're there
-rails = File.join(Dir.getwd, 'config', 'environment.rb')
-if File.exist?(rails) && ENV['SKIP_RAILS'].nil?
-  require rails
-  warn "=> Loading Rails (#{Rails.version})"
-  if Rails.version[0..0] == '3'
-    require 'rails/console/app'
-    require 'rails/console/helpers'
-    if Rails.version[2..2] == '2'
-      extend Rails::ConsoleMethods
+begin
+  warn "Rails #{Rails.version} already loaded."
+rescue NameError => e
+  rails = File.join(Dir.getwd, 'config', 'environment.rb')
+  if File.exist?(rails) 
+    if ENV['SKIP_RAILS'].nil?
+      require rails
+      warn "=> Loading Rails (#{Rails.version})"
+      if Rails.version[0..0] == '3'
+        require 'rails/console/app'
+        require 'rails/console/helpers'
+        if Rails.version[2..2] == '2'
+          extend Rails::ConsoleMethods
+        end
+      elsif Rails.version[0..0] == '2'
+        require 'console_app'
+        require 'console_with_helpers'
+      else
+        warn "=> Cannot load Rails console commands (Not on Rails2 or Rails3?)"
+      end
+    else
+      warn "Not loading Rails because SKIP_RAILS is set."
     end
-  elsif Rails.version[0..0] == '2'
-    require 'console_app'
-    require 'console_with_helpers'
   else
-    warn "=> Cannot load Rails console commands (Not on Rails2 or Rails3?)"
+    warn "Not in a Rails directory."
   end
 end
+
 
 # Setup awesome_print
 begin
